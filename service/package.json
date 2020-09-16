@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install",
-    "test": "mocha *.test.js",
     "dev": "node index.js",
+    "e2etest": "mocha *.e2etest.js",
+    "lint": "npm i && ./node_modules/.bin/eslint *.js",
     "start": "node index.js",
-    "lint": "npm i && ./node_modules/.bin/eslint *.js"
+    "test": "mocha *.test.js"
   },
   "author": "",
   "license": "ISC",
