@@ -4,61 +4,73 @@ pipelines:
   - name: blued-cicd:0.1.0
     jobs:
       # record pipeline event start, pipeline is for blued
-      - name: blued-cicd-lint
+      - name: blued-cicd-pipeline-init
         sdk: "2"
-        packages: ["git", "npm"]
-        description: "Lint"
+        packages: ["git"]
+        description: "Pipeline"
         steps:
-          - printf "\n-------------------- Lint Initiated --------------------\n\n"
+          - printf "\n-------------------- Pipeline Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
           - SHORT_COMMIT_HASH=$(echo "$COMMIT_HASH" | cut -c1-8)
           - sdk track t n stage:Pipeline stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
-          - sdk track t n stage:Lint stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
           - sdk track t n stage:Clone stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
           - npm install
           - npm run lint
-          - sdk track t n stage:Lint stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
           - sdk track t n stage:Clone stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
-          - printf "\n     Lint Succeeded\n"
+          - printf "\n     Pipeline Stage Succeeded\n\n"
+      - name: blued-cicd-lint
+        sdk: "2"
+        packages: ["git", "npm"]
+        description: "Lint"
+        steps:
+          - printf "\n-------------------- Lint Stage --------------------\n\n"
+          - git clone https://github.com/cto-ai/blued.git
+          - cd blued/service
+          - COMMIT_HASH=$(git rev-parse HEAD)
+          - SHORT_COMMIT_HASH=$(echo "$COMMIT_HASH" | cut -c1-8)
+          - sdk track t n stage:Lint stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - npm install
+          - npm run lint
+          - sdk track t n stage:Lint stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - printf "\n     Lint Stage Succeeded\n\n"
       - name: blued-cicd-secaudit
         sdk: "2"
         packages: ["git", "npm"]
         description: "SecurityAudit"
         steps:
-          - printf "\n-------------------- Security Audit Initiated --------------------\n\n"
+          - printf "\n-------------------- Security Audit Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
           - SHORT_COMMIT_HASH=$(echo "$COMMIT_HASH" | cut -c1-8)
           - sdk track t n stage:SecurityAudit stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
-          - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
-          - nvm install latest #debian is using an old version of node that isn't working with audit
+          - npm install npm@latest -g #debian is using an old version of node that isn't working with audit
           - npm install
           - npm audit
-          - printf "\n     Security Audit Succeeded\n"
+          - printf "\n     Security Audit Stage Succeeded\n\n"
           - sdk track t n stage:SecurityAudit stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
       - name: blued-cicd-build
         sdk: "2"
         packages: ["git", "npm"]
         description: "Build"
         steps:
-          - printf "\n-------------------- Build Initiated --------------------\n\n"
+          - printf "\n-------------------- Build Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
           - SHORT_COMMIT_HASH=$(echo "$COMMIT_HASH" | cut -c1-8)
           - sdk track t n stage:Build stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
           - npm run build
-          - printf "\n     Build Succeeded\n"
+          - printf "\n     Build Stage Succeeded\n\n"
           - sdk track t n stage:Build stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
       - name: blued-cicd-unittest
         sdk: "2"
         packages: ["git", "npm"]
         description: "UnitTest"
         steps:
-          - printf "\n-------------------- UnitTest Initiated --------------------\n\n"
+          - printf "\n-------------------- UnitTest Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
@@ -66,14 +78,14 @@ pipelines:
           - sdk track t n stage:UnitTest stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
           - npm run build
           - npm run test
-          - printf "\n     UnitTest Succeeded\n"
+          - printf "\n     UnitTest Stage Succeeded\n\n"
           - sdk track t n stage:UnitTest stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
       - name: blued-cicd-e2etest
         sdk: "2"
         packages: ["git", "npm"]
         description: "E2ETest"
         steps:
-          - printf "\n-------------------- E2ETest Initiated --------------------\n\n"
+          - printf "\n-------------------- E2ETest Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
@@ -81,20 +93,22 @@ pipelines:
           - sdk track t n stage:E2ETest stage_ref:"${SHORT_COMMIT_HASH}" status:Initiated pipeline_id:blued
           - npm run build
           - npm run e2etest
-          - printf "\n     E2ETest Succeeded\n"
+          - printf "\n     E2ETest Stage Succeeded\n\n"
           - sdk track t n stage:E2ETest stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
-        # print out ready to deploy, run redeploy-service.sh which does:
-        # script is called create-new-release, bumps patch version by 1, builds and publishes
+          # print out ready to deploy, run redeploy-service.sh which does:
+          # script is called create-new-release, bumps patch version by 1, builds and publishes
           # update version using bash && cd service && ops build . && ops publish .
-        # then prompts user to do `ops start blued`
+          # then prompts user to do `ops start blued`
       - name: blued-cicd-cleanup
         sdk: "2"
+        packages: ["git", "npm"]
         description: "Cleanup"
         steps:
-          - printf "\n-------------------- Cleanup Initiated --------------------\n\n"
+          - printf "\n-------------------- Cleanup Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - COMMIT_HASH=$(git rev-parse HEAD)
           - SHORT_COMMIT_HASH=$(echo "$COMMIT_HASH" | cut -c1-8)
           - sdk track t n stage:Pipeline stage_ref:"${SHORT_COMMIT_HASH}" status:Succeeded pipeline_id:blued
-          - printf "\nPipeline completed. Launch the service with:\n\n\tops start blued\n"
+          - printf "\n     Cleanup Stage Succeeded\n\n"
+          - printf "\nPipeline run has completed. The service is ready to be launched with:\n\n\tops start blued\n\n"
