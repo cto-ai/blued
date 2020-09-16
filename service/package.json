@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm install",
     "dev": "node index.js",
-    "e2etest": ".node_modules/.bin/mocha *.e2etest.js",
+    "e2etest": "mocha *.e2etest.js",
     "lint": "./node_modules/.bin/eslint *.js",
     "start": "node index.js",
     "test": "mocha *.test.js"
