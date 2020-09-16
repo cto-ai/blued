@@ -1,8 +1,8 @@
-var static = require('node-static');
-var http = require('http');
+const site = require('node-static');
+const http = require('http');
 
-var file = new(static.Server)();
+const file = new(site.Server)();
 
-http.createServer(function (req, res) {
+http.createServer(function(req, res) {
   file.serve(req, res);
 }).listen(8080);

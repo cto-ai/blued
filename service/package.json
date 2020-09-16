@@ -1,15 +1,23 @@
 {
-  "name": "ctoai-service",
+  "name": "blued",
   "version": "1.0.0",
-  "description": "",
+  "description": "The Ops Mesh, displayed in Blue",
   "main": "index.js",
   "scripts": {
+    "build": "npm install",
+    "test": "mocha *.test.js",
     "dev": "node index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "npm i && ./node_modules/.bin/eslint *.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "node-static": "^0.7.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-google": "^0.14.0",
+    "mocha": "^8.1.3"
   }
 }
