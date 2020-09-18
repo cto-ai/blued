@@ -1,6 +1,6 @@
 version: "1"
 pipelines:
-  - name: blued-cicd:0.1.5
+  - name: blued-cicd:0.1.8
     jobs:
       - name: blued-cicd-pipeline-init
         sdk: "2"
@@ -40,7 +40,7 @@ pipelines:
           - COMMIT_HASH=$(git rev-parse HEAD)
           - sdk track t n stage:SecurityAudit stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
           - npm install
-          - #npm audit #this isn't working, I need a more recent version of npm but don't have permissions to install it
+          #- npm audit #this isn't working, I need a more recent version of npm but don't have permissions to install it
           - printf "\n     Security Audit Stage Succeeded\n\n"
           - sdk track t n stage:SecurityAudit stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
       - name: blued-cicd-build
@@ -99,4 +99,4 @@ pipelines:
           - COMMIT_HASH=$(git rev-parse HEAD)
           - sdk track t n stage:Pipeline stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
           - printf "\n     Cleanup Stage Succeeded\n\n"
-          - printf "\nPipeline run has completed. The service is ready to be launched with:\n\n\tops start blued\n\n"
+          - printf "\nPipeline run has completed. The service is ready to be launched with:\n\n\tcd blued/service\n\tops start blued\n\n"
