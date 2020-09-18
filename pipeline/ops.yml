@@ -1,12 +1,12 @@
 # for more info visit https://cto.ai/docs/developing-ops/configuring-ops
 version: "1"
 pipelines:
-  - name: blued-cicd:0.1.0
+  - name: blued-cicd:0.1.1
     jobs:
       # record pipeline event start, pipeline is for blued
       - name: blued-cicd-pipeline-init
         sdk: "2"
-        packages: ["git"]
+        packages: ["git", "npm"]
         description: "Pipeline"
         steps:
           - printf "\n-------------------- Pipeline Stage --------------------\n\n"
