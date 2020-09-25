@@ -48,4 +48,3 @@ jobs:
       with:
         team_id: ${{ secrets.CTOAI_TEAM_ID }}
         token: ${{ secrets.CTOAI_EVENTS_API_TOKEN }}
-        pipeline_id: 'blued'
