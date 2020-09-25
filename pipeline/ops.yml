@@ -1,6 +1,6 @@
 version: "1"
 pipelines:
-  - name: blued-cicd:0.1.11
+  - name: blued-cicd:0.1.12
     jobs:
       - name: blued-cicd-pipeline-init
         sdk: "2"
@@ -52,7 +52,7 @@ pipelines:
         packages: ["git", "npm"]
         description: "Build"
         steps:
-          - hrintf "\n-------------------- Build Stage --------------------\n\n"
+          - printf "\n-------------------- Build Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
           - REPO=cto-ai/blued
