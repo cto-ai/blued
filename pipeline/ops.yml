@@ -1,19 +1,19 @@
 version: "1"
 pipelines:
-  - name: blued-cicd:0.1.8
+  - name: blued-cicd:0.1.11
     jobs:
       - name: blued-cicd-pipeline-init
         sdk: "2"
         packages: ["git", "npm"]
         description: "Pipeline Init"
         steps:
-          - printf "\n-------------------- Pipeline Init Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:Pipeline stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
-          - sdk track t n stage:Clone stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
-          - sdk track t n stage:Clone stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:Pipeline status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
+          - printf "\n-------------------- Pipeline Init Stage --------------------\n\n"
           - printf "\n     Pipeline Stage Succeeded\n\n"
       - name: blued-cicd-lint
         sdk: "2"
@@ -23,11 +23,13 @@ pipelines:
           - printf "\n-------------------- Lint Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:Lint stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:Lint status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - npm install
           - npm run lint
-          - sdk track t n stage:Lint stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - sdk track t n pipeline_id:"${REPO}" stage:Lint status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - printf "\n     Lint Stage Succeeded\n\n"
       - name: blued-cicd-secaudit
         sdk: "2"
@@ -37,25 +39,29 @@ pipelines:
           - printf "\n-------------------- Security Audit Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:SecurityAudit stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:SecurityAudit status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - npm install
           #- npm audit #this isn't working, I need a more recent version of npm but don't have permissions to install it
           - printf "\n     Security Audit Stage Succeeded\n\n"
-          - sdk track t n stage:SecurityAudit stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - sdk track t n pipeline_id:"${REPO}" stage:SecurityAudit status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
       - name: blued-cicd-build
         sdk: "2"
         packages: ["git", "npm"]
         description: "Build"
         steps:
-          - printf "\n-------------------- Build Stage --------------------\n\n"
+          - hrintf "\n-------------------- Build Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:Build stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:Build status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - npm run build
           - printf "\n     Build Stage Succeeded\n\n"
-          - sdk track t n stage:Build stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - sdk track t n pipeline_id:"${REPO}" stage:Build status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
       - name: blued-cicd-unittest
         sdk: "2"
         packages: ["git", "npm"]
@@ -64,12 +70,14 @@ pipelines:
           - printf "\n-------------------- UnitTest Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:UnitTest stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:UnitTest status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - npm run build
           - npm run test
           - printf "\n     UnitTest Stage Succeeded\n\n"
-          - sdk track t n stage:UnitTest stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - sdk track t n pipeline_id:"${REPO}" stage:UnitTest status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
       - name: blued-cicd-e2etest
         sdk: "2"
         packages: ["git", "npm"]
@@ -78,12 +86,14 @@ pipelines:
           - printf "\n-------------------- E2ETest Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:E2ETest stage_ref:"${COMMIT_HASH}" status:Initiated pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:E2ETest status:Initiated stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - npm run build
           - npm run e2etest
           - printf "\n     E2ETest Stage Succeeded\n\n"
-          - sdk track t n stage:E2ETest stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - sdk track t n pipeline_id:"${REPO}" stage:E2ETest status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           # print out ready to deploy, run redeploy-service.sh which does:
           # script is called create-new-release, bumps patch version by 1, builds and publishes
           # update version using bash && cd service && ops build . && ops publish .
@@ -96,7 +106,9 @@ pipelines:
           - printf "\n-------------------- Cleanup Stage --------------------\n\n"
           - git clone https://github.com/cto-ai/blued.git
           - cd blued/service
-          - COMMIT_HASH=$(git rev-parse HEAD)
-          - sdk track t n stage:Pipeline stage_ref:"${COMMIT_HASH}" status:Succeeded pipeline_id:blued
+          - REPO=cto-ai/blued
+          - BRANCH=$(git symbolic-ref --short HEAD)
+          - COMMIT=$(git rev-parse HEAD)
+          - sdk track t n pipeline_id:"${REPO}" stage:Pipeline status:Succeeded stage_ref:"${BRANCH}" change_id:"${COMMIT}"
           - printf "\n     Cleanup Stage Succeeded\n\n"
           - printf "\nPipeline run has completed. The service is ready to be launched with:\n\n\tcd blued/service\n\tops start blued\n\n"
