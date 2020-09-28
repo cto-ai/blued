@@ -1,7 +1,7 @@
 # for more info visit https://cto.ai/docs/developing-ops/configuring-ops
 version: "1"
 services:
-  - name: blued:0.1.6
+  - name: blued:0.7.11
     public: false
     description: A basic service displaying the Ops Mesh in blue
     run: node /ops/index.js

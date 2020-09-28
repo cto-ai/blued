@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: 'CTO.ai Delivery Metrics Agent Invocation'
-      uses: cto-ai/action@slajax/rc-2
+      uses: cto-ai/action@v1-beta
       id: ctoai-agent
       with:
         team_id: ${{ secrets.CTOAI_TEAM_ID }}
