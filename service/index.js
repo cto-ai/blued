@@ -4,22 +4,25 @@ const http = require('http');
 
 const file = new(site.Server)();
 
-http.createServer(function(req, res) {
+const requestListener = function(req, res) {
   file.serve(req, res);
+};
 
+const server = http.createServer(requestListener);
+server.listen(8080, function() {
   const config = require('./config.json');
   const pkg = require('./package.json');
 
   if (config.CTOAI_API_URL === 'https://api.cto.ai') {
     sdk.track('Deployment', {
-      pipeline_id: 'cto-ai/blued',
+      pipeline_id: 'cto-ai/debug-service',
       stage: 'Deployment',
       status: 'Succeeded',
       stage_ref: pkg.version,
     });
   } else {
     sdk.track('Deployment', {
-      pipeline_id: 'cto-ai/blued',
+      pipeline_id: 'cto-ai/debug-service',
       stage: 'Deployment',
       status: 'Failure',
       stage_ref: pkg.version,
@@ -27,14 +30,6 @@ http.createServer(function(req, res) {
   }
 
   console.log('server started!');
-  console.log(process.env);
-}).listen(8080);
-
-process.on('uncaughtException', (err) => {
-  sdk.track('Deployment', {
-    pipeline_id: 'cto-ai/blued',
-    stage: 'Deployment',
-    status: 'Failure',
-    stage_ref: pkg.version,
-  });
 });
+
+
