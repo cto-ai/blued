@@ -15,14 +15,14 @@ server.listen(8080, function() {
 
   if (config.CTOAI_API_URL === 'https://api.cto.ai') {
     sdk.track('Deployment', {
-      pipeline_id: 'cto-ai/debug-service',
+      pipeline_id: 'cto-ai/blued',
       stage: 'Deployment',
       status: 'Succeeded',
       stage_ref: pkg.version,
     });
   } else {
     sdk.track('Deployment', {
-      pipeline_id: 'cto-ai/debug-service',
+      pipeline_id: 'cto-ai/blued',
       stage: 'Deployment',
       status: 'Failure',
       stage_ref: pkg.version,
